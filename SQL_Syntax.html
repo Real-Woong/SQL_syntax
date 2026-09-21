@@ -1,0 +1,356 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>SQL 문법 치트시트</title>
+  <style>
+    :root{--bg:#f5f7fb;--panel:#fff;--ink:#172033;--muted:#687289;--line:#dce2ed;--accent:#4f46e5;--accent2:#eef2ff;--code:#111827;--codeink:#e5e7eb;--ok:#047857;--warn:#b45309;--shadow:0 14px 40px rgba(26,36,60,.08)}
+    [data-theme="dark"]{--bg:#0b1020;--panel:#131a2d;--ink:#edf2ff;--muted:#9ca8c2;--line:#26314b;--accent:#818cf8;--accent2:#20294a;--code:#090d18;--codeink:#e5e7eb;--ok:#34d399;--warn:#fbbf24;--shadow:0 14px 40px rgba(0,0,0,.2)}
+    *{box-sizing:border-box} html{scroll-behavior:smooth} body{margin:0;background:var(--bg);color:var(--ink);font-family:Inter,Pretendard,"Apple SD Gothic Neo","Noto Sans KR",system-ui,sans-serif;line-height:1.62}
+    button,input{font:inherit}.layout{display:grid;grid-template-columns:270px minmax(0,1fr);min-height:100vh}.side{position:sticky;top:0;height:100vh;padding:24px 18px;background:var(--panel);border-right:1px solid var(--line);overflow:auto}.brand{font-size:20px;font-weight:850;letter-spacing:-.04em;margin:0 8px 4px}.sub{font-size:12px;color:var(--muted);margin:0 8px 18px}.search{width:100%;border:1px solid var(--line);background:var(--bg);color:var(--ink);border-radius:10px;padding:10px 12px;outline:none}.search:focus{border-color:var(--accent);box-shadow:0 0 0 3px color-mix(in srgb,var(--accent) 16%,transparent)}nav{margin-top:16px}nav a{display:block;padding:7px 10px;border-radius:8px;color:var(--muted);font-size:13px;text-decoration:none}nav a:hover{color:var(--accent);background:var(--accent2)}.side-actions{display:flex;gap:8px;margin-top:18px}.btn{border:1px solid var(--line);background:var(--panel);color:var(--ink);border-radius:8px;padding:7px 10px;cursor:pointer}.btn:hover{border-color:var(--accent);color:var(--accent)}
+    main{width:min(1120px,100%);padding:54px 44px 100px;margin:0 auto}.hero{padding:34px;border:1px solid var(--line);border-radius:22px;background:linear-gradient(135deg,var(--panel),var(--accent2));box-shadow:var(--shadow);margin-bottom:32px}.eyebrow{color:var(--accent);font-weight:750;font-size:13px}.hero h1{font-size:clamp(32px,5vw,58px);line-height:1.05;letter-spacing:-.055em;margin:10px 0 16px}.hero p{color:var(--muted);max-width:720px;margin:0}.flow{display:flex;flex-wrap:wrap;gap:8px;margin-top:22px}.flow span{font:700 12px ui-monospace,SFMono-Regular,monospace;color:var(--accent);background:var(--panel);border:1px solid var(--line);padding:6px 9px;border-radius:999px}
+    section{scroll-margin-top:24px;margin-top:42px}h2{font-size:26px;letter-spacing:-.035em;margin:0 0 6px}h3{font-size:17px;margin:0}.section-note{color:var(--muted);margin:0 0 18px;font-size:14px}.grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px}.card{min-width:0;border:1px solid var(--line);border-radius:15px;background:var(--panel);overflow:hidden;box-shadow:0 3px 14px rgba(20,30,55,.035)}.card.wide{grid-column:1/-1}.card-head{display:flex;justify-content:space-between;gap:16px;align-items:center;padding:14px 16px;border-bottom:1px solid var(--line)}.tag{font-size:11px;font-weight:750;color:var(--accent);background:var(--accent2);padding:3px 7px;border-radius:999px;white-space:nowrap}.copy{font-size:12px;border:0;background:none;color:var(--muted);cursor:pointer}.copy:hover{color:var(--accent)}pre{margin:0;padding:17px 18px;overflow:auto;background:var(--code);color:var(--codeink);font:13px/1.68 ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;tab-size:2}.kw{color:#c4b5fd}.fn{color:#67e8f9}.str{color:#86efac}.cm{color:#94a3b8}.num{color:#fcd34d}.tip{padding:11px 16px;color:var(--muted);font-size:12px;border-top:1px solid var(--line)}.tip b{color:var(--ink)}.warning{border-left:4px solid var(--warn)}.hidden{display:none!important}.empty{display:none;margin:40px 0;padding:24px;text-align:center;color:var(--muted);border:1px dashed var(--line);border-radius:14px}.foot{margin-top:60px;color:var(--muted);font-size:12px;text-align:center}
+    table{width:100%;border-collapse:collapse;background:var(--panel);font-size:13px}th,td{padding:10px 12px;text-align:left;border-bottom:1px solid var(--line)}th{color:var(--muted);font-size:12px}.table-wrap{overflow:auto;border:1px solid var(--line);border-radius:14px}
+    @media(max-width:820px){.layout{display:block}.side{position:relative;height:auto;border-right:0;border-bottom:1px solid var(--line)}nav{display:none}main{padding:28px 16px 70px}.grid{grid-template-columns:1fr}.hero{padding:25px}.card.wide{grid-column:auto}}
+    @media print{.side,.copy{display:none}.layout{display:block}main{padding:0;width:100%}.hero,.card{box-shadow:none}section{break-inside:avoid}body{background:white}}
+  </style>
+</head>
+<body>
+<div class="layout">
+  <aside class="side">
+    <div class="brand">SQL QUICK REF</div>
+    <p class="sub">MySQL 8 기준 · 실전 문법만</p>
+    <input id="search" class="search" type="search" placeholder="문법 검색 (예: JOIN, 날짜)" aria-label="문법 검색">
+    <nav id="nav">
+      <a href="#basic">01 조회 기본</a><a href="#filter">02 조건과 정렬</a><a href="#function">03 함수와 CASE</a><a href="#group">04 집계와 GROUP BY</a><a href="#join">05 JOIN</a><a href="#subquery">06 서브쿼리와 CTE</a><a href="#set">07 집합 연산</a><a href="#window">08 윈도 함수</a><a href="#dml">09 INSERT · UPDATE · DELETE</a><a href="#ddl">10 테이블 · 인덱스</a><a href="#transaction">11 트랜잭션</a><a href="#order">12 실행 순서 · DB 차이</a>
+    </nav>
+    <div class="side-actions"><button class="btn" id="theme">◐ 테마</button><button class="btn" onclick="print()">⎙ 인쇄</button></div>
+  </aside>
+  <main>
+    <header class="hero">
+      <div class="eyebrow">복사해서 바로 쓰는 SQL</div>
+      <h1>SQL 문법<br>치트시트</h1>
+      <p>테이블명과 컬럼명만 바꿔 바로 사용할 수 있는 형태로 정리했습니다. 예시는 현재 폴더의 MySQL <code>world</code> DB를 사용합니다.</p>
+      <div class="flow"><span>SELECT</span><span>FROM</span><span>JOIN</span><span>WHERE</span><span>GROUP BY</span><span>HAVING</span><span>ORDER BY</span><span>LIMIT</span></div>
+    </header>
+    <div id="empty" class="empty">일치하는 문법이 없습니다.</div>
+
+    <section id="basic" data-search="select 조회 distinct 별칭 limit 페이징">
+      <h2>01. 조회 기본</h2><p class="section-note">조회할 컬럼 → 테이블 → 결과 제한 순으로 작성</p>
+      <div class="grid">
+        <article class="card"><div class="card-head"><h3>기본 조회 · 별칭</h3><span class="tag">SELECT</span></div><pre><span class="kw">SELECT</span>
+  ID,
+  Name <span class="kw">AS</span> city_name,
+  Population population
+<span class="kw">FROM</span> city;</pre><div class="tip"><b>AS</b>는 컬럼 별칭에서 생략 가능</div></article>
+        <article class="card"><div class="card-head"><h3>중복 제거</h3><span class="tag">DISTINCT</span></div><pre><span class="kw">SELECT DISTINCT</span>
+  CountryCode,
+  District
+<span class="kw">FROM</span> city;</pre><div class="tip">나열한 컬럼의 <b>조합 전체</b>를 기준으로 중복 제거</div></article>
+        <article class="card wide"><div class="card-head"><h3>상위 N개 · 페이징</h3><span class="tag">LIMIT</span></div><pre><span class="cm">-- 처음 10개</span>
+<span class="kw">SELECT</span> * <span class="kw">FROM</span> city <span class="kw">ORDER BY</span> ID <span class="kw">LIMIT</span> <span class="num">10</span>;
+
+<span class="cm">-- 21번째 행부터 10개 (offset, count)</span>
+<span class="kw">SELECT</span> * <span class="kw">FROM</span> city <span class="kw">ORDER BY</span> ID <span class="kw">LIMIT</span> <span class="num">20</span>, <span class="num">10</span>;
+<span class="cm">-- 같은 뜻: LIMIT 10 OFFSET 20</span></pre></article>
+      </div>
+    </section>
+
+    <section id="filter" data-search="where 조건 and or not in between like null regexp 정렬 order by">
+      <h2>02. 조건과 정렬</h2><p class="section-note">NULL은 = 대신 IS NULL, 문자열 패턴은 LIKE</p>
+      <div class="grid">
+        <article class="card"><div class="card-head"><h3>비교 · 논리 조건</h3><span class="tag">WHERE</span></div><pre><span class="kw">SELECT</span> * <span class="kw">FROM</span> city
+<span class="kw">WHERE</span> Population &gt;= <span class="num">1000000</span>
+  <span class="kw">AND</span> CountryCode &lt;&gt; <span class="str">'KOR'</span>
+  <span class="kw">AND NOT</span> (District = <span class="str">'Seoul'</span>);</pre><div class="tip">우선순위가 헷갈리면 조건을 <b>괄호</b>로 묶기</div></article>
+        <article class="card"><div class="card-head"><h3>목록 · 범위</h3><span class="tag">IN · BETWEEN</span></div><pre><span class="kw">WHERE</span> CountryCode <span class="kw">IN</span> (<span class="str">'KOR'</span>, <span class="str">'JPN'</span>, <span class="str">'CHN'</span>)
+  <span class="kw">AND</span> Population <span class="kw">BETWEEN</span> <span class="num">100000</span> <span class="kw">AND</span> <span class="num">500000</span>;</pre><div class="tip"><b>BETWEEN</b>은 양쪽 경계값을 포함</div></article>
+        <article class="card"><div class="card-head"><h3>문자열 패턴</h3><span class="tag">LIKE</span></div><pre><span class="kw">WHERE</span> Name <span class="kw">LIKE</span> <span class="str">'Kim%'</span>   <span class="cm">-- Kim으로 시작</span>
+<span class="kw">WHERE</span> Name <span class="kw">LIKE</span> <span class="str">'%san%'</span> <span class="cm">-- san 포함</span>
+<span class="kw">WHERE</span> Name <span class="kw">LIKE</span> <span class="str">'_eoul'</span> <span class="cm">-- 임의 1글자</span>
+<span class="kw">WHERE</span> Name <span class="kw">REGEXP</span> <span class="str">'^(New|San)'</span>;</pre></article>
+        <article class="card warning"><div class="card-head"><h3>NULL 검사</h3><span class="tag">IS NULL</span></div><pre><span class="kw">WHERE</span> column_name <span class="kw">IS NULL</span>;
+<span class="kw">WHERE</span> column_name <span class="kw">IS NOT NULL</span>;
+
+<span class="cm">-- NULL을 대체해 비교</span>
+<span class="kw">WHERE</span> <span class="fn">COALESCE</span>(column_name, <span class="str">''</span>) = <span class="str">''</span>;</pre><div class="tip"><b>= NULL</b>은 사용하지 않음</div></article>
+        <article class="card wide"><div class="card-head"><h3>정렬</h3><span class="tag">ORDER BY</span></div><pre><span class="kw">SELECT</span> Name, CountryCode, Population
+<span class="kw">FROM</span> city
+<span class="kw">ORDER BY</span> CountryCode <span class="kw">ASC</span>, Population <span class="kw">DESC</span>, Name <span class="kw">ASC</span>;</pre><div class="tip"><b>ASC</b> 오름차순(기본값) · <b>DESC</b> 내림차순 · 결과 순서가 필요하면 반드시 명시</div></article>
+      </div>
+    </section>
+
+    <section id="function" data-search="함수 문자열 숫자 날짜 case coalesce concat substring date_format cast">
+      <h2>03. 함수와 CASE</h2><p class="section-note">자주 쓰는 가공 문법을 한 번에</p>
+      <div class="grid">
+        <article class="card"><div class="card-head"><h3>문자열</h3><span class="tag">TEXT</span></div><pre><span class="fn">CONCAT</span>(first_name, <span class="str">' '</span>, last_name)
+<span class="fn">LENGTH</span>(Name)          <span class="cm">-- 바이트 길이</span>
+<span class="fn">CHAR_LENGTH</span>(Name)     <span class="cm">-- 글자 수</span>
+<span class="fn">UPPER</span>(Name), <span class="fn">LOWER</span>(Name)
+<span class="fn">TRIM</span>(Name)
+<span class="fn">SUBSTRING</span>(Name, <span class="num">1</span>, <span class="num">3</span>)
+<span class="fn">REPLACE</span>(Name, <span class="str">'old'</span>, <span class="str">'new'</span>)</pre></article>
+        <article class="card"><div class="card-head"><h3>숫자 · NULL · 형변환</h3><span class="tag">VALUE</span></div><pre><span class="fn">ROUND</span>(price, <span class="num">2</span>)
+<span class="fn">CEIL</span>(price), <span class="fn">FLOOR</span>(price)
+<span class="fn">ABS</span>(amount)
+<span class="fn">COALESCE</span>(nickname, Name, <span class="str">'없음'</span>)
+<span class="fn">NULLIF</span>(value, <span class="num">0</span>)
+<span class="fn">CAST</span>(value <span class="kw">AS</span> <span class="kw">DECIMAL</span>(<span class="num">10</span>,<span class="num">2</span>))
+<span class="fn">CAST</span>(created_at <span class="kw">AS DATE</span>)</pre></article>
+        <article class="card"><div class="card-head"><h3>날짜</h3><span class="tag">DATE</span></div><pre><span class="fn">NOW</span>()                    <span class="cm">-- 현재 일시</span>
+<span class="fn">CURDATE</span>()                <span class="cm">-- 현재 날짜</span>
+<span class="fn">DATE_FORMAT</span>(created_at, <span class="str">'%Y-%m-%d'</span>)
+<span class="fn">DATE_ADD</span>(created_at, <span class="kw">INTERVAL</span> <span class="num">7</span> <span class="kw">DAY</span>)
+<span class="fn">DATE_SUB</span>(created_at, <span class="kw">INTERVAL</span> <span class="num">1</span> <span class="kw">MONTH</span>)
+<span class="fn">DATEDIFF</span>(end_date, start_date)
+<span class="fn">YEAR</span>(created_at), <span class="fn">MONTH</span>(created_at)</pre></article>
+        <article class="card"><div class="card-head"><h3>조건 분기</h3><span class="tag">CASE</span></div><pre><span class="kw">CASE</span>
+  <span class="kw">WHEN</span> Population &gt;= <span class="num">1000000</span> <span class="kw">THEN</span> <span class="str">'대도시'</span>
+  <span class="kw">WHEN</span> Population &gt;= <span class="num">100000</span>  <span class="kw">THEN</span> <span class="str">'중도시'</span>
+  <span class="kw">ELSE</span> <span class="str">'소도시'</span>
+<span class="kw">END AS</span> city_size</pre></article>
+      </div>
+    </section>
+
+    <section id="group" data-search="집계 count sum avg max min group by having 조건부 집계">
+      <h2>04. 집계와 GROUP BY</h2><p class="section-note">그룹 조건은 HAVING, 행 조건은 WHERE</p>
+      <div class="grid">
+        <article class="card"><div class="card-head"><h3>그룹 집계</h3><span class="tag">GROUP BY</span></div><pre><span class="kw">SELECT</span>
+  CountryCode,
+  <span class="fn">COUNT</span>(*) <span class="kw">AS</span> city_count,
+  <span class="fn">SUM</span>(Population) <span class="kw">AS</span> total_pop,
+  <span class="fn">AVG</span>(Population) <span class="kw">AS</span> avg_pop,
+  <span class="fn">MAX</span>(Population) <span class="kw">AS</span> max_pop
+<span class="kw">FROM</span> city
+<span class="kw">WHERE</span> Population &gt; <span class="num">0</span>
+<span class="kw">GROUP BY</span> CountryCode
+<span class="kw">HAVING COUNT</span>(*) &gt;= <span class="num">10</span>;</pre></article>
+        <article class="card"><div class="card-head"><h3>조건부 집계</h3><span class="tag">CASE + SUM</span></div><pre><span class="kw">SELECT</span>
+  CountryCode,
+  <span class="fn">COUNT</span>(*) <span class="kw">AS</span> total_count,
+  <span class="fn">SUM</span>(<span class="kw">CASE WHEN</span> Population &gt;= <span class="num">1000000</span>
+           <span class="kw">THEN</span> <span class="num">1</span> <span class="kw">ELSE</span> <span class="num">0</span> <span class="kw">END</span>) <span class="kw">AS</span> big_count
+<span class="kw">FROM</span> city
+<span class="kw">GROUP BY</span> CountryCode;</pre><div class="tip"><b>COUNT(column)</b>은 NULL 제외 · <b>COUNT(*)</b>은 행 전체</div></article>
+      </div>
+    </section>
+
+    <section id="join" data-search="join inner left right self cross 조인 on">
+      <h2>05. JOIN</h2><p class="section-note">JOIN 조건은 ON에, 결과 필터는 WHERE에 작성</p>
+      <div class="grid">
+        <article class="card"><div class="card-head"><h3>일치하는 행만</h3><span class="tag">INNER JOIN</span></div><pre><span class="kw">SELECT</span> ci.Name, co.Name, ci.Population
+<span class="kw">FROM</span> city <span class="kw">AS</span> ci
+<span class="kw">INNER JOIN</span> country <span class="kw">AS</span> co
+  <span class="kw">ON</span> co.Code = ci.CountryCode;</pre></article>
+        <article class="card"><div class="card-head"><h3>왼쪽 행 모두 유지</h3><span class="tag">LEFT JOIN</span></div><pre><span class="kw">SELECT</span> co.Name, ci.Name
+<span class="kw">FROM</span> country <span class="kw">AS</span> co
+<span class="kw">LEFT JOIN</span> city <span class="kw">AS</span> ci
+  <span class="kw">ON</span> ci.CountryCode = co.Code
+  <span class="kw">AND</span> ci.Population &gt;= <span class="num">1000000</span>;</pre><div class="tip">오른쪽 테이블 조건을 WHERE에 두면 <b>INNER JOIN처럼</b> 될 수 있음</div></article>
+        <article class="card"><div class="card-head"><h3>매칭 없는 행 찾기</h3><span class="tag">ANTI JOIN</span></div><pre><span class="kw">SELECT</span> co.*
+<span class="kw">FROM</span> country <span class="kw">AS</span> co
+<span class="kw">LEFT JOIN</span> city <span class="kw">AS</span> ci
+  <span class="kw">ON</span> ci.CountryCode = co.Code
+<span class="kw">WHERE</span> ci.ID <span class="kw">IS NULL</span>;</pre></article>
+        <article class="card"><div class="card-head"><h3>같은 테이블끼리</h3><span class="tag">SELF JOIN</span></div><pre><span class="kw">SELECT</span> e.name, m.name <span class="kw">AS</span> manager
+<span class="kw">FROM</span> employee e
+<span class="kw">LEFT JOIN</span> employee m
+  <span class="kw">ON</span> m.id = e.manager_id;</pre></article>
+      </div>
+    </section>
+
+    <section id="subquery" data-search="서브쿼리 exists correlated cte with recursive">
+      <h2>06. 서브쿼리와 CTE</h2><p class="section-note">복잡한 쿼리는 WITH로 이름을 붙여 단계별로 읽기</p>
+      <div class="grid">
+        <article class="card"><div class="card-head"><h3>단일값 서브쿼리</h3><span class="tag">SUBQUERY</span></div><pre><span class="kw">SELECT</span> Name, Population
+<span class="kw">FROM</span> city
+<span class="kw">WHERE</span> Population &gt; (
+  <span class="kw">SELECT AVG</span>(Population) <span class="kw">FROM</span> city
+);</pre></article>
+        <article class="card"><div class="card-head"><h3>존재 여부</h3><span class="tag">EXISTS</span></div><pre><span class="kw">SELECT</span> co.*
+<span class="kw">FROM</span> country co
+<span class="kw">WHERE EXISTS</span> (
+  <span class="kw">SELECT</span> <span class="num">1</span> <span class="kw">FROM</span> city ci
+  <span class="kw">WHERE</span> ci.CountryCode = co.Code
+);</pre></article>
+        <article class="card wide"><div class="card-head"><h3>공통 테이블 식</h3><span class="tag">CTE · WITH</span></div><pre><span class="kw">WITH</span> country_stats <span class="kw">AS</span> (
+  <span class="kw">SELECT</span> CountryCode, <span class="fn">COUNT</span>(*) city_count, <span class="fn">SUM</span>(Population) total_pop
+  <span class="kw">FROM</span> city
+  <span class="kw">GROUP BY</span> CountryCode
+)
+<span class="kw">SELECT</span> co.Name, cs.city_count, cs.total_pop
+<span class="kw">FROM</span> country co
+<span class="kw">JOIN</span> country_stats cs <span class="kw">ON</span> cs.CountryCode = co.Code
+<span class="kw">ORDER BY</span> cs.total_pop <span class="kw">DESC</span>;</pre></article>
+      </div>
+    </section>
+
+    <section id="set" data-search="union union all intersect except 집합 합집합 교집합 차집합">
+      <h2>07. 집합 연산</h2><p class="section-note">양쪽 SELECT의 컬럼 수와 호환 가능한 타입을 맞추기</p>
+      <div class="grid">
+        <article class="card wide"><div class="card-head"><h3>결과 합치기</h3><span class="tag">UNION</span></div><pre><span class="cm">-- 중복 제거</span>
+<span class="kw">SELECT</span> Name, <span class="str">'CITY'</span> <span class="kw">AS</span> type <span class="kw">FROM</span> city
+<span class="kw">UNION</span>
+<span class="kw">SELECT</span> Name, <span class="str">'COUNTRY'</span> <span class="kw">AS</span> type <span class="kw">FROM</span> country;
+
+<span class="cm">-- 중복 유지: 일반적으로 더 빠름</span>
+<span class="kw">SELECT</span> Name <span class="kw">FROM</span> table_a
+<span class="kw">UNION ALL</span>
+<span class="kw">SELECT</span> Name <span class="kw">FROM</span> table_b;</pre><div class="tip">MySQL 8.0.31+는 <b>INTERSECT</b>, <b>EXCEPT</b> 지원</div></article>
+      </div>
+    </section>
+
+    <section id="window" data-search="윈도우 함수 row_number rank dense_rank lag lead 누적합 partition over">
+      <h2>08. 윈도 함수</h2><p class="section-note">행을 합치지 않고 순위·누적값·이전값 계산</p>
+      <div class="grid">
+        <article class="card"><div class="card-head"><h3>그룹별 순위</h3><span class="tag">ROW_NUMBER</span></div><pre><span class="kw">SELECT</span>
+  Name, CountryCode, Population,
+  <span class="fn">ROW_NUMBER</span>() <span class="kw">OVER</span> (
+    <span class="kw">PARTITION BY</span> CountryCode
+    <span class="kw">ORDER BY</span> Population <span class="kw">DESC</span>
+  ) <span class="kw">AS</span> rn
+<span class="kw">FROM</span> city;</pre></article>
+        <article class="card"><div class="card-head"><h3>누적합 · 이전값</h3><span class="tag">OVER</span></div><pre><span class="fn">SUM</span>(amount) <span class="kw">OVER</span> (
+  <span class="kw">PARTITION BY</span> user_id
+  <span class="kw">ORDER BY</span> paid_at
+) <span class="kw">AS</span> running_total,
+<span class="fn">LAG</span>(amount) <span class="kw">OVER</span> (
+  <span class="kw">PARTITION BY</span> user_id
+  <span class="kw">ORDER BY</span> paid_at
+) <span class="kw">AS</span> prev_amount</pre><div class="tip"><b>RANK</b>: 공동 순위 뒤 건너뜀 · <b>DENSE_RANK</b>: 건너뛰지 않음</div></article>
+      </div>
+    </section>
+
+    <section id="dml" data-search="insert update delete upsert on duplicate key 데이터 추가 수정 삭제">
+      <h2>09. INSERT · UPDATE · DELETE</h2><p class="section-note">UPDATE와 DELETE 전에는 같은 WHERE로 SELECT 먼저 확인</p>
+      <div class="grid">
+        <article class="card"><div class="card-head"><h3>추가</h3><span class="tag">INSERT</span></div><pre><span class="kw">INSERT INTO</span> city
+  (Name, CountryCode, District, Population)
+<span class="kw">VALUES</span>
+  (<span class="str">'Seoul'</span>, <span class="str">'KOR'</span>, <span class="str">'Seoul'</span>, <span class="num">9500000</span>),
+  (<span class="str">'Busan'</span>, <span class="str">'KOR'</span>, <span class="str">'Busan'</span>, <span class="num">3300000</span>);</pre></article>
+        <article class="card"><div class="card-head"><h3>조회 결과 추가</h3><span class="tag">INSERT SELECT</span></div><pre><span class="kw">INSERT INTO</span> city_backup
+  (ID, Name, CountryCode, Population)
+<span class="kw">SELECT</span> ID, Name, CountryCode, Population
+<span class="kw">FROM</span> city
+<span class="kw">WHERE</span> CountryCode = <span class="str">'KOR'</span>;</pre></article>
+        <article class="card warning"><div class="card-head"><h3>수정</h3><span class="tag">UPDATE</span></div><pre><span class="kw">UPDATE</span> city
+<span class="kw">SET</span> Population = Population + <span class="num">1000</span>,
+    District = <span class="str">'Seoul'</span>
+<span class="kw">WHERE</span> ID = <span class="num">2331</span>;</pre><div class="tip"><b>WHERE 생략 시 모든 행 수정</b></div></article>
+        <article class="card warning"><div class="card-head"><h3>삭제</h3><span class="tag">DELETE</span></div><pre><span class="kw">DELETE FROM</span> city
+<span class="kw">WHERE</span> ID = <span class="num">9999</span>;
+
+<span class="kw">TRUNCATE TABLE</span> city_backup;</pre><div class="tip"><b>TRUNCATE</b>는 테이블의 모든 행을 빠르게 제거</div></article>
+        <article class="card wide"><div class="card-head"><h3>있으면 수정, 없으면 추가</h3><span class="tag">UPSERT · MySQL</span></div><pre><span class="kw">INSERT INTO</span> scores (user_id, score)
+<span class="kw">VALUES</span> (<span class="num">1</span>, <span class="num">90</span>) <span class="kw">AS</span> new
+<span class="kw">ON DUPLICATE KEY UPDATE</span>
+  score = new.score;</pre></article>
+      </div>
+    </section>
+
+    <section id="ddl" data-search="create alter drop table index primary foreign unique constraint ddl 테이블 인덱스">
+      <h2>10. 테이블 · 인덱스</h2><p class="section-note">테이블 구조와 제약조건 정의</p>
+      <div class="grid">
+        <article class="card wide"><div class="card-head"><h3>테이블 생성</h3><span class="tag">CREATE TABLE</span></div><pre><span class="kw">CREATE TABLE</span> orders (
+  id <span class="kw">BIGINT PRIMARY KEY AUTO_INCREMENT</span>,
+  user_id <span class="kw">BIGINT NOT NULL</span>,
+  order_no <span class="kw">VARCHAR</span>(<span class="num">30</span>) <span class="kw">NOT NULL UNIQUE</span>,
+  amount <span class="kw">DECIMAL</span>(<span class="num">12</span>, <span class="num">2</span>) <span class="kw">NOT NULL DEFAULT</span> <span class="num">0</span>,
+  status <span class="kw">VARCHAR</span>(<span class="num">20</span>) <span class="kw">NOT NULL DEFAULT</span> <span class="str">'PENDING'</span>,
+  created_at <span class="kw">DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP</span>,
+  updated_at <span class="kw">DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP
+    ON UPDATE CURRENT_TIMESTAMP</span>,
+  <span class="kw">CONSTRAINT</span> fk_orders_user
+    <span class="kw">FOREIGN KEY</span> (user_id) <span class="kw">REFERENCES</span> users(id)
+);</pre></article>
+        <article class="card"><div class="card-head"><h3>구조 변경</h3><span class="tag">ALTER</span></div><pre><span class="kw">ALTER TABLE</span> orders
+  <span class="kw">ADD COLUMN</span> memo <span class="kw">VARCHAR</span>(<span class="num">255</span>) <span class="kw">NULL</span>;
+
+<span class="kw">ALTER TABLE</span> orders
+  <span class="kw">MODIFY COLUMN</span> memo <span class="kw">TEXT</span>;
+
+<span class="kw">ALTER TABLE</span> orders
+  <span class="kw">DROP COLUMN</span> memo;</pre></article>
+        <article class="card"><div class="card-head"><h3>인덱스</h3><span class="tag">INDEX</span></div><pre><span class="kw">CREATE INDEX</span> idx_orders_user_created
+  <span class="kw">ON</span> orders (user_id, created_at);
+
+<span class="kw">CREATE UNIQUE INDEX</span> ux_orders_no
+  <span class="kw">ON</span> orders (order_no);
+
+<span class="kw">DROP INDEX</span> idx_orders_user_created
+  <span class="kw">ON</span> orders;</pre><div class="tip">복합 인덱스는 보통 <b>왼쪽 컬럼부터</b> 조건에 사용</div></article>
+      </div>
+    </section>
+
+    <section id="transaction" data-search="transaction commit rollback savepoint 트랜잭션">
+      <h2>11. 트랜잭션</h2><p class="section-note">여러 변경을 하나의 작업 단위로 처리</p>
+      <div class="grid"><article class="card wide"><div class="card-head"><h3>시작 · 확정 · 취소</h3><span class="tag">TRANSACTION</span></div><pre><span class="kw">START TRANSACTION</span>;
+
+<span class="kw">UPDATE</span> accounts <span class="kw">SET</span> balance = balance - <span class="num">10000</span> <span class="kw">WHERE</span> id = <span class="num">1</span>;
+<span class="kw">UPDATE</span> accounts <span class="kw">SET</span> balance = balance + <span class="num">10000</span> <span class="kw">WHERE</span> id = <span class="num">2</span>;
+
+<span class="kw">SAVEPOINT</span> transfer_done;
+<span class="cm">-- ROLLBACK TO transfer_done;</span>
+<span class="kw">COMMIT</span>; <span class="cm">-- 전체 확정</span>
+<span class="cm">-- ROLLBACK;  -- 전체 취소</span></pre></article></div>
+    </section>
+
+    <section id="order" data-search="실행순서 db 차이 mysql oracle postgresql sql server limit rownum top fetch">
+      <h2>12. 실행 순서 · DB 차이</h2><p class="section-note">문법을 디버깅할 때 가장 자주 확인할 두 가지</p>
+      <div class="grid">
+        <article class="card"><div class="card-head"><h3>논리적 실행 순서</h3><span class="tag">ORDER</span></div><pre><span class="num">1</span>. <span class="kw">FROM / JOIN / ON</span>
+<span class="num">2</span>. <span class="kw">WHERE</span>
+<span class="num">3</span>. <span class="kw">GROUP BY</span>
+<span class="num">4</span>. <span class="kw">HAVING</span>
+<span class="num">5</span>. <span class="kw">SELECT</span>
+<span class="num">6</span>. <span class="kw">DISTINCT</span>
+<span class="num">7</span>. <span class="kw">ORDER BY</span>
+<span class="num">8</span>. <span class="kw">LIMIT / OFFSET</span></pre><div class="tip">그래서 SELECT 별칭은 일반적으로 <b>WHERE에서 사용 불가</b></div></article>
+        <article class="card"><div class="card-head"><h3>행 개수 제한</h3><span class="tag">DBMS</span></div><pre><span class="cm">-- MySQL / PostgreSQL</span>
+<span class="kw">LIMIT</span> <span class="num">10</span> <span class="kw">OFFSET</span> <span class="num">20</span>
+
+<span class="cm">-- Oracle / 표준 SQL</span>
+<span class="kw">OFFSET</span> <span class="num">20</span> <span class="kw">ROWS FETCH NEXT</span> <span class="num">10</span> <span class="kw">ROWS ONLY</span>
+
+<span class="cm">-- SQL Server</span>
+<span class="kw">SELECT TOP</span> (<span class="num">10</span>) ...</pre></article>
+      </div>
+      <div class="table-wrap" style="margin-top:16px"><table><thead><tr><th>목적</th><th>MySQL</th><th>Oracle</th><th>PostgreSQL</th><th>SQL Server</th></tr></thead><tbody><tr><td>NULL 대체</td><td>IFNULL / COALESCE</td><td>NVL / COALESCE</td><td>COALESCE</td><td>ISNULL / COALESCE</td></tr><tr><td>문자 연결</td><td>CONCAT()</td><td>||</td><td>||</td><td>CONCAT() / +</td></tr><tr><td>현재 일시</td><td>NOW()</td><td>SYSDATE</td><td>NOW()</td><td>GETDATE()</td></tr><tr><td>자동 증가</td><td>AUTO_INCREMENT</td><td>IDENTITY / SEQUENCE</td><td>IDENTITY / SERIAL</td><td>IDENTITY</td></tr></tbody></table></div>
+    </section>
+    <p class="foot">SQL 문법 치트시트 · MySQL 8 중심 · 브라우저에서 Ctrl/⌘ + F 또는 왼쪽 검색 사용</p>
+  </main>
+</div>
+<script>
+  const cards = [...document.querySelectorAll('.card')];
+  cards.forEach(card => {
+    const pre = card.querySelector('pre');
+    if (!pre) return;
+    const button = document.createElement('button');
+    button.className = 'copy'; button.textContent = '복사';
+    button.addEventListener('click', async () => {
+      await navigator.clipboard.writeText(pre.innerText);
+      button.textContent = '복사됨 ✓'; setTimeout(() => button.textContent = '복사', 1200);
+    });
+    card.querySelector('.card-head').appendChild(button);
+  });
+  const search = document.querySelector('#search');
+  search.addEventListener('input', () => {
+    const q = search.value.trim().toLowerCase(); let visible = 0;
+    document.querySelectorAll('section').forEach(section => {
+      const matched = !q || (section.innerText + ' ' + section.dataset.search).toLowerCase().includes(q);
+      section.classList.toggle('hidden', !matched); if (matched) visible++;
+    });
+    document.querySelector('#empty').style.display = visible ? 'none' : 'block';
+  });
+  const root = document.documentElement;
+  const saved = localStorage.getItem('sql-theme');
+  if (saved) root.dataset.theme = saved;
+  document.querySelector('#theme').addEventListener('click', () => {
+    root.dataset.theme = root.dataset.theme === 'dark' ? 'light' : 'dark';
+    localStorage.setItem('sql-theme', root.dataset.theme);
+  });
+</script>
+</body>
+</html>
